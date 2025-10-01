@@ -161,8 +161,39 @@
                 <select id="routeSelect" onchange="loadRoute()">
                     <option value="">-- Select a Route --</option>
                 </select>
-                <div style="margin-top: 15px;">
+                <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
                     <button class="btn btn-success" onclick="showCreateRoute()">➕ Create New Route</button>
+                    <button class="btn" onclick="showImportCSV()">📁 Import CSV</button>
+                </div>
+            </div>
+
+            <!-- Import CSV Section -->
+            <div class="section" id="importCSVSection" style="display: none;">
+                <h3 style="margin-bottom: 15px;">📁 Import Routes from CSV</h3>
+                <p style="margin-bottom: 15px; color: #6c757d;">
+                    Upload a CSV file with the following columns:<br>
+                    <strong>Bus Route, Last Name, First Name, Grade</strong>
+                </p>
+                <input type="file" id="csvFileInput" accept=".csv" style="margin-bottom: 15px;">
+                <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong>CSV Format Example:</strong>
+                    <pre style="margin-top: 10px; font-size: 0.9rem;">Bus Route,Last Name,First Name,Grade
+Morning Route A,Johnson,Emma,5
+Morning Route A,Smith,Liam,4
+Morning Route B,Anderson,Isabella,3
+Morning Route B,Taylor,James,5</pre>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="hasHeaderRow" checked style="width: auto;">
+                        <span>First row contains column headers</span>
+                    </label>
+                </div>
+                <button class="btn btn-success" onclick="processCSV()">📤 Upload & Import</button>
+                <button class="btn" onclick="cancelImportCSV()">Cancel</button>
+                <div id="csvPreview" style="margin-top: 15px; display: none;">
+                    <strong>Preview:</strong>
+                    <div id="csvPreviewContent" style="max-height: 200px; overflow-y: auto; background: white; padding: 10px; border-radius: 5px; margin-top: 10px;"></div>
                 </div>
             </div>
 
@@ -477,6 +508,144 @@
             boardedStudents = {};
             displayRoster();
             updateStatus('🗑️ Run cleared', 'info');
+        }
+
+        function showImportCSV() {
+            document.getElementById('importCSVSection').style.display = 'block';
+            document.getElementById('csvFileInput').value = '';
+            updateStatus('Select a CSV file to import routes', 'info');
+        }
+
+        function cancelImportCSV() {
+            document.getElementById('importCSVSection').style.display = 'none';
+            updateStatus('CSV import cancelled', 'info');
+        }
+
+        async function processCSV() {
+            const fileInput = document.getElementById('csvFileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                updateStatus('⚠️ Please select a CSV file', 'error');
+                return;
+            }
+
+            if (!file.name.endsWith('.csv')) {
+                updateStatus('⚠️ Please select a valid CSV file', 'error');
+                return;
+            }
+
+            try {
+                const text = await file.text();
+                const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+                
+                if (lines.length === 0) {
+                    updateStatus('⚠️ CSV file is empty', 'error');
+                    return;
+                }
+
+                const hasHeader = document.getElementById('hasHeaderRow').checked;
+                const startIndex = hasHeader ? 1 : 0;
+                
+                const newRoutes = {};
+                let studentCount = 0;
+                let errors = [];
+
+                for (let i = startIndex; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    // Split by comma, handling quoted values
+                    const parts = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+                    
+                    if (!parts || parts.length < 4) {
+                        errors.push(`Line ${i + 1}: Expected 4 columns (Bus Route, Last Name, First Name, Grade)`);
+                        continue;
+                    }
+
+                    // Clean up values (remove quotes and trim)
+                    const busRoute = parts[0].replace(/^"|"$/g, '').trim();
+                    const lastName = parts[1].replace(/^"|"$/g, '').trim();
+                    const firstName = parts[2].replace(/^"|"$/g, '').trim();
+                    const grade = parts[3].replace(/^"|"$/g, '').trim();
+
+                    if (!busRoute || !lastName || !firstName) {
+                        errors.push(`Line ${i + 1}: Missing required data`);
+                        continue;
+                    }
+
+                    // Create full name with grade
+                    const fullName = `${firstName} ${lastName} (Grade ${grade})`;
+
+                    // Add to routes
+                    if (!newRoutes[busRoute]) {
+                        newRoutes[busRoute] = [];
+                    }
+
+                    // Avoid duplicates
+                    if (!newRoutes[busRoute].includes(fullName)) {
+                        newRoutes[busRoute].push(fullName);
+                        studentCount++;
+                    }
+                }
+
+                if (Object.keys(newRoutes).length === 0) {
+                    let errorMsg = '⚠️ No valid routes found in CSV';
+                    if (errors.length > 0) {
+                        errorMsg += ':\n' + errors.slice(0, 5).join('\n');
+                        if (errors.length > 5) {
+                            errorMsg += `\n... and ${errors.length - 5} more errors`;
+                        }
+                    }
+                    updateStatus(errorMsg, 'error');
+                    return;
+                }
+
+                // Sort students by name within each route
+                Object.keys(newRoutes).forEach(routeName => {
+                    newRoutes[routeName].sort();
+                });
+
+                // Merge with existing routes
+                const routeNames = Object.keys(newRoutes);
+                let addedCount = 0;
+                let updatedCount = 0;
+
+                routeNames.forEach(routeName => {
+                    if (rosters.hasOwnProperty(routeName)) {
+                        updatedCount++;
+                    } else {
+                        addedCount++;
+                    }
+                    rosters[routeName] = newRoutes[routeName];
+                });
+
+                // Save to localStorage
+                localStorage.setItem('busRosters', JSON.stringify(rosters));
+
+                // Reload route options
+                loadRouteOptions();
+
+                // Hide import section
+                document.getElementById('importCSVSection').style.display = 'none';
+
+                // Show success message
+                let message = `✅ Imported ${studentCount} students across ${routeNames.length} routes`;
+                if (addedCount > 0) message += ` (${addedCount} new)`;
+                if (updatedCount > 0) message += ` (${updatedCount} updated)`;
+                if (errors.length > 0) message += `\n⚠️ ${errors.length} rows had errors`;
+                
+                updateStatus(message, 'success');
+
+                console.log('Import completed:', {
+                    routes: routeNames,
+                    students: studentCount,
+                    errors: errors
+                });
+
+            } catch (error) {
+                console.error('CSV import error:', error);
+                updateStatus('❌ Error reading CSV file: ' + error.message, 'error');
+            }
         }
 
         function showCreateRoute() {
