@@ -6,14 +6,12 @@
     <title>Bus Roster Tracker</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -21,7 +19,6 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
-        
         .header {
             background: linear-gradient(135deg, #ff6b6b, #feca57);
             padding: 30px;
@@ -29,24 +26,14 @@
             color: white;
             border-radius: 20px 20px 0 0;
         }
-        
         .header h1 { font-size: 2rem; margin-bottom: 5px; }
         .version { font-size: 0.8rem; opacity: 0.8; margin-top: 10px; }
-        
         .content { padding: 30px; }
-        
         .status { padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: 500; }
         .status-success { background: #d4edda; color: #155724; }
         .status-error { background: #f8d7da; color: #721c24; }
         .status-info { background: #cce7ff; color: #004085; }
-        
-        .section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-        
+        .section { background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
         .btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -58,11 +45,9 @@
             font-weight: 600;
             margin: 5px;
         }
-        
         .btn:hover { transform: translateY(-2px); }
         .btn-success { background: linear-gradient(135deg, #28a745, #20c997); }
         .btn-danger { background: linear-gradient(135deg, #dc3545, #c82333); }
-        
         select, input, textarea {
             width: 100%;
             padding: 12px;
@@ -71,7 +56,6 @@
             font-size: 1rem;
             margin-bottom: 15px;
         }
-        
         .student-item {
             display: flex;
             align-items: center;
@@ -81,42 +65,13 @@
             border-radius: 10px;
             border-left: 4px solid #667eea;
         }
-        
         .student-item:hover { background: #e9ecef; }
         .student-item.checked { background: #d4edda; border-left-color: #28a745; }
         .student-item.additional { border-left-color: #feca57; background: #fff9e6; }
-        
-        .student-item input[type="checkbox"] {
-            width: 24px;
-            height: 24px;
-            margin-right: 15px;
-            cursor: pointer;
-        }
-        
-        .student-name {
-            flex: 1;
-            font-weight: 500;
-            font-size: 1.1rem;
-        }
-        
-        .badge {
-            background: #feca57;
-            color: #856404;
-            padding: 4px 12px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-right: 10px;
-        }
-        
-        .time-badge {
-            background: #6c757d;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-        }
-        
+        .student-item input[type="checkbox"] { width: 24px; height: 24px; margin-right: 15px; cursor: pointer; }
+        .student-name { flex: 1; font-weight: 500; font-size: 1.1rem; }
+        .badge { background: #feca57; color: #856404; padding: 4px 12px; border-radius: 5px; font-size: 0.8rem; font-weight: 600; margin-right: 10px; }
+        .time-badge { background: #6c757d; color: white; padding: 4px 8px; border-radius: 5px; font-size: 0.8rem; }
         .count-box {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -125,16 +80,8 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        
-        .count-number {
-            font-size: 3rem;
-            font-weight: bold;
-            display: block;
-            margin: 10px 0;
-        }
-        
+        .count-number { font-size: 3rem; font-weight: bold; display: block; margin: 10px 0; }
         .count-label { font-size: 1.1rem; opacity: 0.9; }
-        
         @media (max-width: 768px) {
             .header h1 { font-size: 1.5rem; }
             .content { padding: 20px; }
@@ -147,15 +94,12 @@
         <div class="header">
             <h1>🚌 Bus Roster Tracker</h1>
             <p>Check off students as they board</p>
-            <div class="version">Version 3.0</div>
+            <div class="version">Version 3.1</div>
         </div>
         
         <div class="content">
-            <div id="statusMessage" class="status status-info">
-                Select a route to begin
-            </div>
+            <div id="statusMessage" class="status status-info">Select a route to begin</div>
 
-            <!-- Route Selection -->
             <div class="section">
                 <h3 style="margin-bottom: 15px;">📍 Select Route</h3>
                 <select id="routeSelect" onchange="loadRoute()">
@@ -167,37 +111,6 @@
                 </div>
             </div>
 
-            <!-- Import CSV Section -->
-            <div class="section" id="importCSVSection" style="display: none;">
-                <h3 style="margin-bottom: 15px;">📁 Import Routes from CSV</h3>
-                <p style="margin-bottom: 15px; color: #6c757d;">
-                    Upload a CSV file with the following columns:<br>
-                    <strong>Bus Route, Last Name, First Name, Grade</strong>
-                </p>
-                <input type="file" id="csvFileInput" accept=".csv" style="margin-bottom: 15px;">
-                <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                    <strong>CSV Format Example:</strong>
-                    <pre style="margin-top: 10px; font-size: 0.9rem;">Bus Route,Last Name,First Name,Grade
-Morning Route A,Johnson,Emma,5
-Morning Route A,Smith,Liam,4
-Morning Route B,Anderson,Isabella,3
-Morning Route B,Taylor,James,5</pre>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" id="hasHeaderRow" checked style="width: auto;">
-                        <span>First row contains column headers</span>
-                    </label>
-                </div>
-                <button class="btn btn-success" onclick="processCSV()">📤 Upload & Import</button>
-                <button class="btn" onclick="cancelImportCSV()">Cancel</button>
-                <div id="csvPreview" style="margin-top: 15px; display: none;">
-                    <strong>Preview:</strong>
-                    <div id="csvPreviewContent" style="max-height: 200px; overflow-y: auto; background: white; padding: 10px; border-radius: 5px; margin-top: 10px;"></div>
-                </div>
-            </div>
-
-            <!-- Create New Route Section -->
             <div class="section" id="createRouteSection" style="display: none;">
                 <h3 style="margin-bottom: 15px;">➕ Create New Route</h3>
                 <input type="text" id="newRouteName" placeholder="Enter route name (e.g., Morning Route C)">
@@ -207,33 +120,43 @@ Morning Route B,Taylor,James,5</pre>
                 <button class="btn" onclick="cancelCreateRoute()">Cancel</button>
             </div>
 
-            <!-- Import Roster -->
-            <div class="section" id="importSection" style="display: none;">
-                <h3 style="margin-bottom: 15px;">📝 Import/Edit Roster</h3>
-                <p style="margin-bottom: 10px; color: #6c757d;">Paste student names (one per line):</p>
-                <textarea id="rosterInput" placeholder="Emma Johnson&#10;Liam Smith&#10;Olivia Brown"></textarea>
-                <button class="btn btn-success" onclick="saveRoster()">💾 Save Roster</button>
-                <button class="btn" onclick="toggleImport()">Cancel</button>
+            <div class="section" id="importCSVSection" style="display: none;">
+                <h3 style="margin-bottom: 15px;">📁 Import Routes from CSV</h3>
+                <p style="margin-bottom: 15px; color: #6c757d;">
+                    Upload a CSV with columns: <strong>Bus Route, Last Name, First Name, Grade, To Be Left</strong>
+                </p>
+                <input type="file" id="csvFileInput" accept=".csv">
+                <div style="background: #e9ecef; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                    <strong>CSV Example:</strong>
+                    <pre style="margin-top: 10px; font-size: 0.9rem;">Bus Route,Last Name,First Name,Grade,To Be Left
+Morning Route A,Johnson,Emma,5,School
+Morning Route A,Smith,Liam,4,Daycare</pre>
+                </div>
+                <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                    <input type="checkbox" id="hasHeaderRow" checked style="width: auto;">
+                    <span>First row contains headers</span>
+                </label>
+                <button class="btn btn-success" onclick="processCSV()">📤 Upload & Import</button>
+                <button class="btn" onclick="cancelImportCSV()">Cancel</button>
             </div>
 
-            <!-- Student Count -->
             <div class="count-box" id="countBox" style="display: none;">
                 <div class="count-label">Students on Bus</div>
                 <span class="count-number" id="studentCount">0</span>
                 <div class="count-label"><span id="totalCount">0</span> Total Students</div>
+                <button class="btn" onclick="recordArrival()" style="margin-top: 15px; background: linear-gradient(135deg, #feca57, #ff9ff3);">
+                    📍 Record Arrival Time
+                </button>
+                <div id="arrivalTime" style="margin-top: 10px; font-size: 1rem; opacity: 0.9;"></div>
             </div>
 
-            <!-- Student Roster -->
             <div id="rosterContainer" style="display: none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3>✅ Student Roster</h3>
-                    <button class="btn" onclick="toggleImport()" style="font-size: 0.9rem; padding: 8px 16px;">
-                        ✏️ Edit Roster
-                    </button>
+                    <button class="btn" onclick="toggleImport()" style="font-size: 0.9rem; padding: 8px 16px;">✏️ Edit Roster</button>
                 </div>
                 <div id="studentList"></div>
                 
-                <!-- Add Additional Student -->
                 <div class="section" style="margin-top: 20px;">
                     <h4 style="margin-bottom: 15px;">➕ Add Student Not on Roster</h4>
                     <input type="text" id="additionalName" placeholder="Enter student name">
@@ -241,7 +164,14 @@ Morning Route B,Taylor,James,5</pre>
                 </div>
             </div>
 
-            <!-- Export Section -->
+            <div class="section" id="importSection" style="display: none;">
+                <h3 style="margin-bottom: 15px;">📝 Import/Edit Roster</h3>
+                <p style="margin-bottom: 10px; color: #6c757d;">Paste student names (one per line):</p>
+                <textarea id="rosterInput" placeholder="Emma Johnson&#10;Liam Smith"></textarea>
+                <button class="btn btn-success" onclick="saveRoster()">💾 Save Roster</button>
+                <button class="btn" onclick="toggleImport()">Cancel</button>
+            </div>
+
             <div id="exportSection" style="display: none; margin-top: 30px;">
                 <div class="section">
                     <h3 style="margin-bottom: 15px;">📤 Export & Send Report</h3>
@@ -256,21 +186,17 @@ Morning Route B,Taylor,James,5</pre>
     </div>
 
     <script>
-        // HARDCODED EMAIL ADDRESS
         const ADMIN_EMAIL = "jamesbryson@northeastacademy.org";
-
-        // Load rosters from localStorage or use defaults
         let rosters = JSON.parse(localStorage.getItem('busRosters') || JSON.stringify({
-            "Morning Route A": ["Emma Johnson", "Liam Smith", "Olivia Brown", "Noah Davis", "Ava Wilson"],
-            "Morning Route B": ["Isabella Anderson", "James Taylor", "Mia Thomas", "Benjamin Moore"],
-            "Afternoon Route A": ["Harper Thompson", "Alexander Lee", "Evelyn Walker", "Michael Hall"],
-            "Afternoon Route B": ["Ella Lopez", "David Hill", "Elizabeth Scott", "Joseph Green"]
+            "Morning Route A": [
+                {name: "Emma Johnson", grade: "5", toBeLeft: "School"},
+                {name: "Liam Smith", grade: "4", toBeLeft: "Daycare"}
+            ]
         }));
-
         let currentRoute = '';
-        let boardedStudents = {}; // {studentName: timestamp}
+        let boardedStudents = {};
+        let arrivalTime = null;
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadRouteOptions();
             updateStatus('Select a route to begin tracking', 'info');
@@ -295,40 +221,47 @@ Morning Route B,Taylor,James,5</pre>
                 document.getElementById('exportSection').style.display = 'none';
                 return;
             }
-
             currentRoute = routeName;
             boardedStudents = {};
-            
+            arrivalTime = null;
+            document.getElementById('arrivalTime').textContent = '';
             document.getElementById('rosterContainer').style.display = 'block';
             document.getElementById('countBox').style.display = 'block';
             document.getElementById('exportSection').style.display = 'block';
-            
             displayRoster();
             updateStatus(`✅ Loaded ${routeName}`, 'success');
+        }
+
+        function recordArrival() {
+            arrivalTime = new Date().toLocaleString();
+            document.getElementById('arrivalTime').textContent = `🎯 Arrived: ${arrivalTime}`;
+            updateStatus('✅ Arrival time recorded', 'success');
         }
 
         function displayRoster() {
             const container = document.getElementById('studentList');
             container.innerHTML = '';
-            
             const roster = rosters[currentRoute] || [];
-            const totalStudents = roster.length + Object.keys(boardedStudents).filter(name => !roster.includes(name)).length;
             
-            // Display rostered students
-            roster.forEach(studentName => {
-                const div = document.createElement('div');
+            roster.forEach(student => {
+                const studentName = typeof student === 'string' ? student : student.name;
+                const grade = student.grade || '';
+                const toBeLeft = student.toBeLeft || '';
+                const displayName = grade ? `${studentName} (Grade ${grade})` : studentName;
                 const isBoarded = boardedStudents.hasOwnProperty(studentName);
+                
+                const div = document.createElement('div');
                 div.className = 'student-item' + (isBoarded ? ' checked' : '');
                 
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.checked = isBoarded;
-                checkbox.onchange = () => toggleStudent(studentName);
+                checkbox.onchange = () => toggleStudent(studentName, toBeLeft);
                 
                 const label = document.createElement('span');
                 label.className = 'student-name';
-                label.textContent = studentName;
-                label.onclick = () => { checkbox.checked = !checkbox.checked; toggleStudent(studentName); };
+                label.textContent = displayName + (toBeLeft ? ` → ${toBeLeft}` : '');
+                label.onclick = () => { checkbox.checked = !checkbox.checked; toggleStudent(studentName, toBeLeft); };
                 
                 div.appendChild(checkbox);
                 div.appendChild(label);
@@ -336,53 +269,54 @@ Morning Route B,Taylor,James,5</pre>
                 if (isBoarded) {
                     const timeBadge = document.createElement('span');
                     timeBadge.className = 'time-badge';
-                    timeBadge.textContent = boardedStudents[studentName];
+                    timeBadge.textContent = boardedStudents[studentName].timestamp;
                     div.appendChild(timeBadge);
                 }
-                
                 container.appendChild(div);
             });
 
-            // Display additional students
             Object.keys(boardedStudents).forEach(studentName => {
-                if (!roster.includes(studentName)) {
+                const isInRoster = roster.some(s => (typeof s === 'string' ? s : s.name) === studentName);
+                if (!isInRoster) {
                     const div = document.createElement('div');
                     div.className = 'student-item additional checked';
                     
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
                     checkbox.checked = true;
-                    checkbox.onchange = () => toggleStudent(studentName);
+                    checkbox.onchange = () => toggleStudent(studentName, boardedStudents[studentName].toBeLeft);
                     
                     const badge = document.createElement('span');
                     badge.className = 'badge';
-                    badge.textContent = 'EXTRA';
+                    badge.textContent = 'ADDED';
                     
                     const label = document.createElement('span');
                     label.className = 'student-name';
-                    label.textContent = studentName;
+                    const toBeLeft = boardedStudents[studentName].toBeLeft || '';
+                    label.textContent = studentName + (toBeLeft ? ` → ${toBeLeft}` : '');
                     
                     const timeBadge = document.createElement('span');
                     timeBadge.className = 'time-badge';
-                    timeBadge.textContent = boardedStudents[studentName];
+                    timeBadge.textContent = boardedStudents[studentName].timestamp;
                     
                     div.appendChild(checkbox);
                     div.appendChild(badge);
                     div.appendChild(label);
                     div.appendChild(timeBadge);
-                    
                     container.appendChild(div);
                 }
             });
-
             updateCount();
         }
 
-        function toggleStudent(studentName) {
+        function toggleStudent(studentName, toBeLeft = '') {
             if (boardedStudents.hasOwnProperty(studentName)) {
                 delete boardedStudents[studentName];
             } else {
-                boardedStudents[studentName] = new Date().toLocaleTimeString();
+                boardedStudents[studentName] = {
+                    timestamp: new Date().toLocaleTimeString(),
+                    toBeLeft: toBeLeft
+                };
             }
             displayRoster();
         }
@@ -390,60 +324,212 @@ Morning Route B,Taylor,James,5</pre>
         function addAdditionalStudent() {
             const input = document.getElementById('additionalName');
             const name = input.value.trim();
-            
             if (!name) {
                 updateStatus('⚠️ Please enter a student name', 'error');
                 return;
             }
-
             if (boardedStudents.hasOwnProperty(name)) {
                 updateStatus('⚠️ Student already on bus', 'error');
                 return;
             }
-
-            boardedStudents[name] = new Date().toLocaleTimeString();
+            boardedStudents[name] = { timestamp: new Date().toLocaleTimeString(), toBeLeft: '' };
+            const roster = rosters[currentRoute] || [];
+            const existsInRoster = roster.some(s => (typeof s === 'string' ? s : s.name) === name);
+            if (!existsInRoster) {
+                roster.push({name: name, grade: '', toBeLeft: ''});
+                rosters[currentRoute] = roster;
+                localStorage.setItem('busRosters', JSON.stringify(rosters));
+            }
             input.value = '';
             displayRoster();
-            updateStatus(`✅ Added ${name}`, 'success');
+            updateStatus(`✅ Added ${name} to roster and checked on board`, 'success');
         }
 
         function updateCount() {
             const boardedCount = Object.keys(boardedStudents).length;
             const roster = rosters[currentRoute] || [];
-            const additionalCount = Object.keys(boardedStudents).filter(name => !roster.includes(name)).length;
-            const totalCount = roster.length + additionalCount;
-            
             document.getElementById('studentCount').textContent = boardedCount;
-            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('totalCount').textContent = roster.length;
+        }
+
+        function showCreateRoute() {
+            document.getElementById('createRouteSection').style.display = 'block';
+            document.getElementById('newRouteName').value = '';
+            document.getElementById('newRosterInput').value = '';
+        }
+
+        function cancelCreateRoute() {
+            document.getElementById('createRouteSection').style.display = 'none';
+        }
+
+        function createNewRoute() {
+            const routeName = document.getElementById('newRouteName').value.trim();
+            const rosterInput = document.getElementById('newRosterInput').value;
+            if (!routeName) {
+                updateStatus('⚠️ Please enter a route name', 'error');
+                return;
+            }
+            if (rosters.hasOwnProperty(routeName)) {
+                updateStatus('⚠️ Route already exists', 'error');
+                return;
+            }
+            const names = rosterInput.split('\n').map(name => name.trim()).filter(name => name.length > 0);
+            if (names.length === 0) {
+                updateStatus('⚠️ Please enter at least one student', 'error');
+                return;
+            }
+            rosters[routeName] = names.map(name => ({name: name, grade: '', toBeLeft: ''}));
+            localStorage.setItem('busRosters', JSON.stringify(rosters));
+            loadRouteOptions();
+            document.getElementById('routeSelect').value = routeName;
+            document.getElementById('createRouteSection').style.display = 'none';
+            currentRoute = routeName;
+            boardedStudents = {};
+            document.getElementById('rosterContainer').style.display = 'block';
+            document.getElementById('countBox').style.display = 'block';
+            document.getElementById('exportSection').style.display = 'block';
+            displayRoster();
+            updateStatus(`✅ Created route "${routeName}" with ${names.length} students`, 'success');
+        }
+
+        function showImportCSV() {
+            document.getElementById('importCSVSection').style.display = 'block';
+            document.getElementById('csvFileInput').value = '';
+        }
+
+        function cancelImportCSV() {
+            document.getElementById('importCSVSection').style.display = 'none';
+        }
+
+        async function processCSV() {
+            console.log('processCSV called');
+            const fileInput = document.getElementById('csvFileInput');
+            const file = fileInput.files[0];
+            
+            console.log('File:', file);
+            
+            if (!file) {
+                updateStatus('⚠️ Please select a CSV file', 'error');
+                return;
+            }
+            
+            updateStatus('📂 Reading CSV file...', 'info');
+            
+            try {
+                const text = await file.text();
+                console.log('File content length:', text.length);
+                console.log('First 200 chars:', text.substring(0, 200));
+                
+                const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+                console.log('Total lines:', lines.length);
+                
+                if (lines.length === 0) {
+                    updateStatus('⚠️ CSV file is empty', 'error');
+                    return;
+                }
+                
+                const hasHeader = document.getElementById('hasHeaderRow').checked;
+                const startIndex = hasHeader ? 1 : 0;
+                console.log('Has header:', hasHeader, 'Start index:', startIndex);
+                
+                const newRoutes = {};
+                let studentCount = 0;
+                let errorCount = 0;
+                
+                for (let i = startIndex; i < lines.length; i++) {
+                    const line = lines[i];
+                    console.log(`Processing line ${i}:`, line);
+                    
+                    // Split by comma, handling quoted values
+                    const parts = line.split(',').map(p => p.trim().replace(/^"|"$/g, ''));
+                    console.log('Parts:', parts);
+                    
+                    if (parts.length < 5) {
+                        console.log(`Line ${i}: Not enough columns (${parts.length})`);
+                        errorCount++;
+                        continue;
+                    }
+                    
+                    const busRoute = parts[0];
+                    const lastName = parts[1];
+                    const firstName = parts[2];
+                    const grade = parts[3];
+                    const toBeLeft = parts[4];
+                    
+                    if (!busRoute || !lastName || !firstName) {
+                        console.log(`Line ${i}: Missing required data`);
+                        errorCount++;
+                        continue;
+                    }
+                    
+                    const fullName = `${firstName} ${lastName}`;
+                    const studentObj = {name: fullName, grade: grade, toBeLeft: toBeLeft};
+                    
+                    if (!newRoutes[busRoute]) {
+                        newRoutes[busRoute] = [];
+                        console.log('Created new route:', busRoute);
+                    }
+                    
+                    const isDuplicate = newRoutes[busRoute].some(s => s.name === fullName);
+                    if (!isDuplicate) {
+                        newRoutes[busRoute].push(studentObj);
+                        studentCount++;
+                        console.log(`Added student: ${fullName} to ${busRoute}`);
+                    }
+                }
+                
+                console.log('Routes created:', Object.keys(newRoutes));
+                console.log('Total students:', studentCount);
+                console.log('Errors:', errorCount);
+                
+                if (Object.keys(newRoutes).length === 0) {
+                    updateStatus(`⚠️ No valid routes found. Errors: ${errorCount}`, 'error');
+                    return;
+                }
+                
+                // Sort students by name within each route
+                Object.keys(newRoutes).forEach(routeName => {
+                    newRoutes[routeName].sort((a, b) => a.name.localeCompare(b.name));
+                    rosters[routeName] = newRoutes[routeName];
+                });
+                
+                console.log('Saving to localStorage...');
+                localStorage.setItem('busRosters', JSON.stringify(rosters));
+                console.log('Saved successfully');
+                
+                loadRouteOptions();
+                document.getElementById('importCSVSection').style.display = 'none';
+                
+                let message = `✅ Imported ${studentCount} students across ${Object.keys(newRoutes).length} routes`;
+                if (errorCount > 0) message += ` (${errorCount} errors)`;
+                updateStatus(message, 'success');
+                
+            } catch (error) {
+                console.error('CSV import error:', error);
+                updateStatus('❌ Error: ' + error.message, 'error');
+            }
         }
 
         function toggleImport() {
             const importSection = document.getElementById('importSection');
-            const isVisible = importSection.style.display !== 'none';
-            
-            if (isVisible) {
+            if (importSection.style.display !== 'none') {
                 importSection.style.display = 'none';
             } else {
                 const roster = rosters[currentRoute] || [];
-                document.getElementById('rosterInput').value = roster.join('\n');
+                document.getElementById('rosterInput').value = roster.map(s => typeof s === 'string' ? s : s.name).join('\n');
                 importSection.style.display = 'block';
             }
         }
 
         function saveRoster() {
             const input = document.getElementById('rosterInput').value;
-            const names = input.split('\n')
-                .map(name => name.trim())
-                .filter(name => name.length > 0);
-            
+            const names = input.split('\n').map(name => name.trim()).filter(name => name.length > 0);
             if (names.length === 0) {
-                updateStatus('⚠️ Please enter at least one student name', 'error');
+                updateStatus('⚠️ Please enter at least one student', 'error');
                 return;
             }
-
-            rosters[currentRoute] = names;
+            rosters[currentRoute] = names.map(name => ({name: name, grade: '', toBeLeft: ''}));
             localStorage.setItem('busRosters', JSON.stringify(rosters));
-            
             document.getElementById('importSection').style.display = 'none';
             displayRoster();
             updateStatus(`✅ Saved roster with ${names.length} students`, 'success');
@@ -454,22 +540,22 @@ Morning Route B,Taylor,James,5</pre>
                 updateStatus('⚠️ No students to export', 'error');
                 return;
             }
-
-            let csv = 'Route,Student Name,Board Time,Status\n';
+            let csv = 'Route,Student Name,Board Time,Destination,Status\n';
             const roster = rosters[currentRoute] || [];
-            
             Object.keys(boardedStudents).forEach(name => {
-                const status = roster.includes(name) ? 'Rostered' : 'Additional';
-                csv += `"${currentRoute}","${name}","${boardedStudents[name]}","${status}"\n`;
+                const studentData = boardedStudents[name];
+                const rosterEntry = roster.find(s => (typeof s === 'string' ? s : s.name) === name);
+                const status = rosterEntry ? 'Rostered' : 'Added';
+                const destination = studentData.toBeLeft || '';
+                csv += `"${currentRoute}","${name}","${studentData.timestamp}","${destination}","${status}"\n`;
             });
-
+            if (arrivalTime) csv += `\nArrival Time:,"${arrivalTime}"\n`;
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `bus_run_${currentRoute.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
-            
             updateStatus('✅ CSV downloaded', 'success');
         }
 
@@ -478,230 +564,29 @@ Morning Route B,Taylor,James,5</pre>
                 updateStatus('⚠️ No students to send', 'error');
                 return;
             }
-
             const roster = rosters[currentRoute] || [];
             const boardedCount = Object.keys(boardedStudents).length;
-            const additionalCount = Object.keys(boardedStudents).filter(name => !roster.includes(name)).length;
-
             const subject = `Bus Report: ${currentRoute} - ${new Date().toLocaleDateString()}`;
-            let body = `Bus Run Report\n\n`;
-            body += `Route: ${currentRoute}\n`;
-            body += `Date: ${new Date().toLocaleString()}\n`;
-            body += `Students Boarded: ${boardedCount}\n`;
-            body += `Additional Students: ${additionalCount}\n\n`;
-            body += `Student List:\n================\n`;
-            
+            let body = `Bus Run Report\n\nRoute: ${currentRoute}\nDate: ${new Date().toLocaleString()}\nStudents Boarded: ${boardedCount}\n`;
+            if (arrivalTime) body += `Arrival Time: ${arrivalTime}\n`;
+            body += `\nStudent List:\n================\n`;
             Object.keys(boardedStudents).sort().forEach((name, i) => {
-                const status = roster.includes(name) ? '' : ' (EXTRA)';
-                body += `${i + 1}. ${name} - ${boardedStudents[name]}${status}\n`;
+                const studentData = boardedStudents[name];
+                const rosterEntry = roster.find(s => (typeof s === 'string' ? s : s.name) === name);
+                const status = rosterEntry ? '' : ' (ADDED TO ROSTER)';
+                const destination = studentData.toBeLeft ? ` → ${studentData.toBeLeft}` : '';
+                body += `${i + 1}. ${name} - Boarded: ${studentData.timestamp}${destination}${status}\n`;
             });
-
             const mailtoLink = `mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.location.href = mailtoLink;
-            
-            updateStatus('📧 Email opened - send when ready', 'success');
+            updateStatus('📧 Email opened', 'success');
         }
 
         function clearRun() {
             if (!confirm('Clear all checked students for this run?')) return;
-            
             boardedStudents = {};
             displayRoster();
             updateStatus('🗑️ Run cleared', 'info');
-        }
-
-        function showImportCSV() {
-            document.getElementById('importCSVSection').style.display = 'block';
-            document.getElementById('csvFileInput').value = '';
-            updateStatus('Select a CSV file to import routes', 'info');
-        }
-
-        function cancelImportCSV() {
-            document.getElementById('importCSVSection').style.display = 'none';
-            updateStatus('CSV import cancelled', 'info');
-        }
-
-        async function processCSV() {
-            const fileInput = document.getElementById('csvFileInput');
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                updateStatus('⚠️ Please select a CSV file', 'error');
-                return;
-            }
-
-            if (!file.name.endsWith('.csv')) {
-                updateStatus('⚠️ Please select a valid CSV file', 'error');
-                return;
-            }
-
-            try {
-                const text = await file.text();
-                const lines = text.split('\n').map(line => line.trim()).filter(line => line);
-                
-                if (lines.length === 0) {
-                    updateStatus('⚠️ CSV file is empty', 'error');
-                    return;
-                }
-
-                const hasHeader = document.getElementById('hasHeaderRow').checked;
-                const startIndex = hasHeader ? 1 : 0;
-                
-                const newRoutes = {};
-                let studentCount = 0;
-                let errors = [];
-
-                for (let i = startIndex; i < lines.length; i++) {
-                    const line = lines[i];
-                    
-                    // Split by comma, handling quoted values
-                    const parts = line.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
-                    
-                    if (!parts || parts.length < 4) {
-                        errors.push(`Line ${i + 1}: Expected 4 columns (Bus Route, Last Name, First Name, Grade)`);
-                        continue;
-                    }
-
-                    // Clean up values (remove quotes and trim)
-                    const busRoute = parts[0].replace(/^"|"$/g, '').trim();
-                    const lastName = parts[1].replace(/^"|"$/g, '').trim();
-                    const firstName = parts[2].replace(/^"|"$/g, '').trim();
-                    const grade = parts[3].replace(/^"|"$/g, '').trim();
-
-                    if (!busRoute || !lastName || !firstName) {
-                        errors.push(`Line ${i + 1}: Missing required data`);
-                        continue;
-                    }
-
-                    // Create full name with grade
-                    const fullName = `${firstName} ${lastName} (Grade ${grade})`;
-
-                    // Add to routes
-                    if (!newRoutes[busRoute]) {
-                        newRoutes[busRoute] = [];
-                    }
-
-                    // Avoid duplicates
-                    if (!newRoutes[busRoute].includes(fullName)) {
-                        newRoutes[busRoute].push(fullName);
-                        studentCount++;
-                    }
-                }
-
-                if (Object.keys(newRoutes).length === 0) {
-                    let errorMsg = '⚠️ No valid routes found in CSV';
-                    if (errors.length > 0) {
-                        errorMsg += ':\n' + errors.slice(0, 5).join('\n');
-                        if (errors.length > 5) {
-                            errorMsg += `\n... and ${errors.length - 5} more errors`;
-                        }
-                    }
-                    updateStatus(errorMsg, 'error');
-                    return;
-                }
-
-                // Sort students by name within each route
-                Object.keys(newRoutes).forEach(routeName => {
-                    newRoutes[routeName].sort();
-                });
-
-                // Merge with existing routes
-                const routeNames = Object.keys(newRoutes);
-                let addedCount = 0;
-                let updatedCount = 0;
-
-                routeNames.forEach(routeName => {
-                    if (rosters.hasOwnProperty(routeName)) {
-                        updatedCount++;
-                    } else {
-                        addedCount++;
-                    }
-                    rosters[routeName] = newRoutes[routeName];
-                });
-
-                // Save to localStorage
-                localStorage.setItem('busRosters', JSON.stringify(rosters));
-
-                // Reload route options
-                loadRouteOptions();
-
-                // Hide import section
-                document.getElementById('importCSVSection').style.display = 'none';
-
-                // Show success message
-                let message = `✅ Imported ${studentCount} students across ${routeNames.length} routes`;
-                if (addedCount > 0) message += ` (${addedCount} new)`;
-                if (updatedCount > 0) message += ` (${updatedCount} updated)`;
-                if (errors.length > 0) message += `\n⚠️ ${errors.length} rows had errors`;
-                
-                updateStatus(message, 'success');
-
-                console.log('Import completed:', {
-                    routes: routeNames,
-                    students: studentCount,
-                    errors: errors
-                });
-
-            } catch (error) {
-                console.error('CSV import error:', error);
-                updateStatus('❌ Error reading CSV file: ' + error.message, 'error');
-            }
-        }
-
-        function showCreateRoute() {
-            document.getElementById('createRouteSection').style.display = 'block';
-            document.getElementById('newRouteName').value = '';
-            document.getElementById('newRosterInput').value = '';
-            updateStatus('Enter route name and student list', 'info');
-        }
-
-        function cancelCreateRoute() {
-            document.getElementById('createRouteSection').style.display = 'none';
-            updateStatus('Route creation cancelled', 'info');
-        }
-
-        function createNewRoute() {
-            const routeName = document.getElementById('newRouteName').value.trim();
-            const rosterInput = document.getElementById('newRosterInput').value;
-            
-            if (!routeName) {
-                updateStatus('⚠️ Please enter a route name', 'error');
-                return;
-            }
-
-            if (rosters.hasOwnProperty(routeName)) {
-                updateStatus('⚠️ Route already exists. Choose a different name.', 'error');
-                return;
-            }
-
-            const names = rosterInput.split('\n')
-                .map(name => name.trim())
-                .filter(name => name.length > 0);
-            
-            if (names.length === 0) {
-                updateStatus('⚠️ Please enter at least one student name', 'error');
-                return;
-            }
-
-            // Add new route to rosters
-            rosters[routeName] = names;
-            localStorage.setItem('busRosters', JSON.stringify(rosters));
-            
-            // Reload route options and select new route
-            loadRouteOptions();
-            document.getElementById('routeSelect').value = routeName;
-            
-            // Hide create section and load the new route
-            document.getElementById('createRouteSection').style.display = 'none';
-            currentRoute = routeName;
-            boardedStudents = {};
-            
-            document.getElementById('rosterContainer').style.display = 'block';
-            document.getElementById('countBox').style.display = 'block';
-            document.getElementById('exportSection').style.display = 'block';
-            
-            displayRoster();
-            updateStatus(`✅ Created route "${routeName}" with ${names.length} students`, 'success');
         }
 
         function updateStatus(message, type) {
