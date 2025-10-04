@@ -6,6 +6,7 @@ Bus Route - Route name
 Last Name - Student's last name
 First Name - Student's first name
 Grade - Student's grade level
+Leave - Y or N. Indicates whether the parent has okayed a student to be left by themselves at the bus stop
 
 Example CSV File:
 Bus Route,Last Name,First Name,Grade
@@ -36,6 +37,7 @@ Column A: Bus Route
 Column B: Last Name
 Column C: First Name
 Column D: Grade
+Column E: Leave Y or N (new in Build)
 Save As → CSV
 
 The app will now properly parse your student roster files and display students with their grade levels!
