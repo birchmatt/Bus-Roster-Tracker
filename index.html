@@ -108,6 +108,7 @@
                 <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
                     <button class="btn btn-success" onclick="showCreateRoute()">➕ Create New Route</button>
                     <button class="btn" onclick="showImportCSV()">📁 Import CSV</button>
+                    <button class="btn" onclick="exportAllRoutes()" style="background: linear-gradient(135deg, #17a2b8, #138496);">💾 Export All Routes</button>
                 </div>
             </div>
 
@@ -144,10 +145,10 @@ Morning Route A,Smith,Liam,4,Daycare</pre>
                 <div class="count-label">Students on Bus</div>
                 <span class="count-number" id="studentCount">0</span>
                 <div class="count-label"><span id="totalCount">0</span> Total Students</div>
-                <button class="btn" onclick="recordArrival()" style="margin-top: 15px; background: linear-gradient(135deg, #feca57, #ff9ff3);">
-                    📍 Record Arrival Time
+                <button class="btn" onclick="recordStop()" style="margin-top: 15px; background: linear-gradient(135deg, #feca57, #ff9ff3);">
+                    📍 Record Stop Time
                 </button>
-                <div id="arrivalTime" style="margin-top: 10px; font-size: 1rem; opacity: 0.9;"></div>
+                <div id="stopTimes" style="margin-top: 10px; font-size: 0.95rem; opacity: 0.9;"></div>
             </div>
 
             <div id="rosterContainer" style="display: none;">
@@ -186,7 +187,7 @@ Morning Route A,Smith,Liam,4,Daycare</pre>
     </div>
 
     <script>
-        const ADMIN_EMAIL = "Jamesbryson@northeastacademy.org";
+        const ADMIN_EMAIL = "jamesbryson@northeastacademy.org";
         let rosters = JSON.parse(localStorage.getItem('busRosters') || JSON.stringify({
             "Morning Route A": [
                 {name: "Emma Johnson", grade: "5", toBeLeft: "School"},
@@ -195,7 +196,7 @@ Morning Route A,Smith,Liam,4,Daycare</pre>
         }));
         let currentRoute = '';
         let boardedStudents = {};
-        let arrivalTime = null;
+        let arrivalTimes = []; // Changed to array for multiple stops
 
         document.addEventListener('DOMContentLoaded', function() {
             loadRouteOptions();
@@ -223,8 +224,8 @@ Morning Route A,Smith,Liam,4,Daycare</pre>
             }
             currentRoute = routeName;
             boardedStudents = {};
-            arrivalTime = null;
-            document.getElementById('arrivalTime').textContent = '';
+            arrivalTimes = [];
+            document.getElementById('stopTimes').innerHTML = '';
             document.getElementById('rosterContainer').style.display = 'block';
             document.getElementById('countBox').style.display = 'block';
             document.getElementById('exportSection').style.display = 'block';
@@ -232,10 +233,31 @@ Morning Route A,Smith,Liam,4,Daycare</pre>
             updateStatus(`✅ Loaded ${routeName}`, 'success');
         }
 
-        function recordArrival() {
-            arrivalTime = new Date().toLocaleString();
-            document.getElementById('arrivalTime').textContent = `🎯 Arrived: ${arrivalTime}`;
-            updateStatus('✅ Arrival time recorded', 'success');
+        function recordStop() {
+            const stopNumber = arrivalTimes.length + 1;
+            const currentTime = new Date().toLocaleString();
+            arrivalTimes.push({
+                stop: stopNumber,
+                time: currentTime
+            });
+            
+            displayStopTimes();
+            updateStatus(`✅ Stop ${stopNumber} recorded at ${currentTime}`, 'success');
+        }
+
+        function displayStopTimes() {
+            const container = document.getElementById('stopTimes');
+            if (arrivalTimes.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = '<div style="text-align: left; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 8px; margin-top: 10px;">';
+            arrivalTimes.forEach(stop => {
+                html += `<div style="margin: 5px 0;">📍 Stop ${stop.stop}: ${stop.time}</div>`;
+            });
+            html += '</div>';
+            container.innerHTML = html;
         }
 
         function displayRoster() {
@@ -535,6 +557,62 @@ Morning Route A,Smith,Liam,4,Daycare</pre>
             updateStatus(`✅ Saved roster with ${names.length} students`, 'success');
         }
 
+        function exportAllRoutes() {
+            const allRoutes = Object.keys(rosters);
+            
+            if (allRoutes.length === 0) {
+                updateStatus('⚠️ No routes to export', 'error');
+                return;
+            }
+            
+            let totalStudents = 0;
+            let csv = 'Bus Route,Last Name,First Name,Grade,To Be Left\n';
+            
+            // Loop through all routes and add students
+            allRoutes.forEach(routeName => {
+                const roster = rosters[routeName];
+                roster.forEach(student => {
+                    const studentName = typeof student === 'string' ? student : student.name;
+                    const grade = student.grade || '';
+                    const toBeLeft = student.toBeLeft || '';
+                    
+                    // Split name into first and last
+                    const nameParts = studentName.split(' ');
+                    let firstName = '';
+                    let lastName = '';
+                    
+                    if (nameParts.length === 1) {
+                        firstName = nameParts[0];
+                        lastName = '';
+                    } else if (nameParts.length === 2) {
+                        firstName = nameParts[0];
+                        lastName = nameParts[1];
+                    } else {
+                        // More than 2 parts - first word is first name, rest is last name
+                        firstName = nameParts[0];
+                        lastName = nameParts.slice(1).join(' ');
+                    }
+                    
+                    csv += `"${routeName}","${lastName}","${firstName}","${grade}","${toBeLeft}"\n`;
+                    totalStudents++;
+                });
+            });
+            
+            // Create and download the file
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `all_bus_routes_${new Date().toISOString().split('T')[0]}.csv`;
+            a.style.visibility = 'hidden';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            updateStatus(`✅ Exported ${totalStudents} students across ${allRoutes.length} routes`, 'success');
+        }
+
         function exportToCSV() {
             if (Object.keys(boardedStudents).length === 0) {
                 updateStatus('⚠️ No students to export', 'error');
@@ -549,7 +627,12 @@ Morning Route A,Smith,Liam,4,Daycare</pre>
                 const destination = studentData.toBeLeft || '';
                 csv += `"${currentRoute}","${name}","${studentData.timestamp}","${destination}","${status}"\n`;
             });
-            if (arrivalTime) csv += `\nArrival Time:,"${arrivalTime}"\n`;
+            if (arrivalTimes.length > 0) {
+                csv += `\n`;
+                arrivalTimes.forEach(stop => {
+                    csv += `Stop ${stop.stop}:,"${stop.time}"\n`;
+                });
+            }
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -568,7 +651,12 @@ Morning Route A,Smith,Liam,4,Daycare</pre>
             const boardedCount = Object.keys(boardedStudents).length;
             const subject = `Bus Report: ${currentRoute} - ${new Date().toLocaleDateString()}`;
             let body = `Bus Run Report\n\nRoute: ${currentRoute}\nDate: ${new Date().toLocaleString()}\nStudents Boarded: ${boardedCount}\n`;
-            if (arrivalTime) body += `Arrival Time: ${arrivalTime}\n`;
+            if (arrivalTimes.length > 0) {
+                body += `\nStop Times:\n`;
+                arrivalTimes.forEach(stop => {
+                    body += `  Stop ${stop.stop}: ${stop.time}\n`;
+                });
+            }
             body += `\nStudent List:\n================\n`;
             Object.keys(boardedStudents).sort().forEach((name, i) => {
                 const studentData = boardedStudents[name];
@@ -583,9 +671,11 @@ Morning Route A,Smith,Liam,4,Daycare</pre>
         }
 
         function clearRun() {
-            if (!confirm('Clear all checked students for this run?')) return;
+            if (!confirm('Clear all checked students and stop times for this run?')) return;
             boardedStudents = {};
+            arrivalTimes = [];
             displayRoster();
+            displayStopTimes();
             updateStatus('🗑️ Run cleared', 'info');
         }
 
